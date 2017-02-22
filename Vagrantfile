@@ -21,6 +21,7 @@ Vagrant.configure("2") do |config|
     dev_env.vm.box = "ubuntu/trusty64"
     dev_env.vm.box_version = "20170220.0.0"
     dev_env.vm.provision :shell, path: "bootstrap.sh"
+    dev_env.vm.network :forwarded_port, guest: 80, host: 4567
     end
 
 end
