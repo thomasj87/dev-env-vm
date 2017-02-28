@@ -10,10 +10,14 @@ repos = (ENV['repos_dir'].nil?) ? "none" : ENV['repos_dir']
 
 
 Vagrant.configure("2") do |config|
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 1024
+  end
+
   config.vm.define "dev_env" do |dev_env|
     usage = "Usage: repos_dir='<dir>' vagrant up dev_env"
     abort(usage) if (repos == 'none' && ARGV[0] == "up")
-
+    dev_env.vm.provider "virtualbox"
     dev_env.vm.hostname = "dev-env-vm"
     dev_env.vm.synced_folder repos, "/repos" if (ARGV[0] == "up")
     dev_env.vm.synced_folder "~/.ssh", "/home/vagrant/ssh"
@@ -23,6 +27,7 @@ Vagrant.configure("2") do |config|
     dev_env.vm.provision :shell, path: "bootstrap.sh"
     dev_env.vm.network :forwarded_port, guest: 80, host: 4567
     dev_env.vm.network :forwarded_port, guest: 5000, host: 4568
+
     end
 
 end
